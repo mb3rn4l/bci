@@ -25,14 +25,16 @@ class LoginServiceSpec extends Specification {
 
 
         def stubbedUserRepository = Stub(UserJpaAdapter) {
-            findByToken(_) >> { user };
+            findByEmail(_) >> { user };
+        }
+
+        def stubbedJwtUtil = Stub(JwtUtil) {
+            getClaim(_, _) >> { "email" };
         }
 
         def token = "token";
-        def jwt = new JwtUtil();
-        jwt.secret = "secret"
         def mockedSaveUserRepository = Mock(UserJpaAdapter)
-        def loginService = new LoginService(stubbedUserRepository, mockedSaveUserRepository, jwt)
+        def loginService = new LoginService(stubbedUserRepository, mockedSaveUserRepository, stubbedJwtUtil)
 
 
         when: 'se llama al servicio para que ejecute la logica'
@@ -49,13 +51,16 @@ class LoginServiceSpec extends Specification {
         given: 'se consulta un usuario por token'
 
         def stubbedUserRepository = Stub(UserJpaAdapter) {
-            findByToken(_) >> { throw new NotFoundException() };
+            findByEmail(_) >> { throw new NotFoundException() };
+        }
+
+        def stubbedJwtUtil = Stub(JwtUtil) {
+            getClaim(_, _) >> { "email" };
         }
 
         def token = "token";
-        def jwt = new JwtUtil();
         def mockedSaveUserRepository = Mock(UserJpaAdapter)
-        def loginService = new LoginService(stubbedUserRepository, mockedSaveUserRepository, jwt);
+        def loginService = new LoginService(stubbedUserRepository, mockedSaveUserRepository, stubbedJwtUtil);
 
         when: 'se llama al servicio para que ejecute la logica'
 
