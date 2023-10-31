@@ -9,7 +9,7 @@ import spock.lang.Specification
 
 import java.time.LocalDate
 
-class LoginServiceTest extends Specification {
+class LoginServiceSpec extends Specification {
     void 'Usuario consultado correctamente'() {
         given: 'se consulta un usuario por token'
 
