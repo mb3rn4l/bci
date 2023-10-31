@@ -2,7 +2,7 @@ package com.bci.bci.layer.domain.port.repository;
 
 import com.bci.bci.layer.domain.model.User;
 
-public interface IFindUserByTokenPort {
+public interface IFindUserByEmailPort {
 
-    User findByToken(String token);
+    User findByEmail(String email);
 }

@@ -4,7 +4,7 @@ package com.bci.bci.layer.application.handler;
 import com.bci.bci.layer.application.dto.LoginUserResponse;
 import com.bci.bci.layer.application.mapper.LoginResponseMapper;
 import com.bci.bci.layer.domain.model.User;
-import com.bci.bci.layer.domain.service.LoginService;
+import com.bci.bci.layer.domain.port.service.ILoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class LoginHandler {
 
-    private final LoginService loginService;
+    private final ILoginService loginService;
 
     private final LoginResponseMapper responseMapper;
 

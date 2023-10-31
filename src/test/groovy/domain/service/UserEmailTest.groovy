@@ -1,7 +1,10 @@
-package domain.model
+package domain.service
 
+import com.bci.bci.layer.domain.constants.UserConstants
 import com.bci.bci.layer.domain.exception.InvalidDataException
 import com.bci.bci.layer.domain.model.User
+import com.bci.bci.layer.domain.service.SignUpService
+import com.bci.bci.layer.infrastructure.adapter.repository.UserJpaAdapter
 import spock.lang.Specification
 
 import java.time.LocalDate
@@ -13,8 +16,6 @@ class UserEmailTest extends Specification {
 
         def email = "prueba@prueba.com"
 
-        when: 'creamos un usuario'
-
         def user = User.builder()
                 .created(LocalDate.now())
                 .lastLogin(null)
@@ -24,6 +25,17 @@ class UserEmailTest extends Specification {
                 .email(email)
                 .password("a2asfGfdfdf4")
                 .build()
+
+        def stubbedExistUserRepository = Stub(UserJpaAdapter) {
+            exist(_) >> false
+        }
+
+        def mockedSaveUserRepository = Mock(UserJpaAdapter)
+        def signUpService = new SignUpService(mockedSaveUserRepository, stubbedExistUserRepository);
+
+        when: 'creamos un usuario'
+
+        signUpService.execute(user)
 
         then: 'el usuario es creado correctamente'
 
@@ -35,7 +47,6 @@ class UserEmailTest extends Specification {
 
         def email = "prueba.gmail.com"
 
-        when: 'creamos un usuario'
         def user = User.builder()
                 .created(LocalDate.now())
                 .lastLogin(null)
@@ -46,8 +57,19 @@ class UserEmailTest extends Specification {
                 .password("a2asfGfdfdf4")
                 .build()
 
+        def stubbedExistUserRepository = Stub(UserJpaAdapter) {
+            exist(_) >> false
+        }
+
+        def mockedSaveUserRepository = Mock(UserJpaAdapter)
+        def signUpService = new SignUpService(mockedSaveUserRepository, stubbedExistUserRepository);
+
+        when: 'creamos un usuario'
+
+        signUpService.execute(user)
+
         then: 'se lanza una excepcion'
         def e = thrown(InvalidDataException)
-        e.message == User.INVALID_EMAIL_FORMAT
+        e.message == UserConstants.INVALID_EMAIL_FORMAT
     }
 }

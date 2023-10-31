@@ -3,7 +3,7 @@ package com.bci.bci.layer.infrastructure.adapter.repository;
 import com.bci.bci.layer.domain.exception.NotFoundException;
 import com.bci.bci.layer.domain.model.User;
 import com.bci.bci.layer.domain.port.repository.IExistUserPort;
-import com.bci.bci.layer.domain.port.repository.IFindUserByTokenPort;
+import com.bci.bci.layer.domain.port.repository.IFindUserByEmailPort;
 import com.bci.bci.layer.domain.port.repository.ISaveUserPort;
 import com.bci.bci.layer.infrastructure.jpa.entity.UserEntity;
 import com.bci.bci.layer.infrastructure.jpa.repository.IUserRepository;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class UserJpaAdapter implements ISaveUserPort, IFindUserByTokenPort, IExistUserPort {
+public class UserJpaAdapter implements ISaveUserPort, IFindUserByEmailPort, IExistUserPort {
 
     private final IUserRepository userRepository;
 
@@ -28,9 +28,9 @@ public class UserJpaAdapter implements ISaveUserPort, IFindUserByTokenPort, IExi
     }
 
     @Override
-    public User findByToken(final String token) {
+    public User findByEmail(final String email) {
 
-        UserEntity userEntity = this.userRepository.findByToken(token)
+        UserEntity userEntity = this.userRepository.findByEmail(email)
                 .orElseThrow(NotFoundException::new);
 
         return userMapper.toUser(userEntity);

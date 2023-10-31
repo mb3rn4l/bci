@@ -1,7 +1,10 @@
-package domain.model
+package domain.service
 
+import com.bci.bci.layer.domain.constants.UserConstants
 import com.bci.bci.layer.domain.exception.InvalidDataException
 import com.bci.bci.layer.domain.model.User
+import com.bci.bci.layer.domain.service.SignUpService
+import com.bci.bci.layer.infrastructure.adapter.repository.UserJpaAdapter
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -14,8 +17,6 @@ class UserPasswordTest extends Specification {
 
         def password = "a2asfGfdfdf4"
 
-        when: 'creamos un usuario'
-
         def user = User.builder()
                 .created(LocalDate.now())
                 .lastLogin(null)
@@ -25,6 +26,17 @@ class UserPasswordTest extends Specification {
                 .email("prueba@prueba.com")
                 .password(password)
                 .build()
+
+        def stubbedExistUserRepository = Stub(UserJpaAdapter) {
+            exist(_) >> false
+        }
+
+        def mockedSaveUserRepository = Mock(UserJpaAdapter)
+        def signUpService = new SignUpService(mockedSaveUserRepository, stubbedExistUserRepository);
+
+        when: 'creamos un usuario'
+
+        signUpService.execute(user)
 
         then: 'el usuario es creado correctamente'
 
@@ -35,7 +47,6 @@ class UserPasswordTest extends Specification {
     void 'password #password invalida'() {
         given: 'han ingresado una password con formato invalido'
 
-        when: 'creamos un usuario'
         def user = User.builder()
                 .created(LocalDate.now())
                 .lastLogin(null)
@@ -46,9 +57,20 @@ class UserPasswordTest extends Specification {
                 .password(password)
                 .build()
 
+        def stubbedExistUserRepository = Stub(UserJpaAdapter) {
+            exist(_) >> false
+        }
+
+        def mockedSaveUserRepository = Mock(UserJpaAdapter)
+        def signUpService = new SignUpService(mockedSaveUserRepository, stubbedExistUserRepository);
+
+        when: 'creamos un usuario'
+
+        signUpService.execute(user)
+
         then: 'se lanza una excepcion'
         def e = thrown(expectedException)
-        e.message == User.INVALID_PASSWORD_FORMAT
+        e.message == UserConstants.INVALID_PASSWORD_FORMAT
 
         where:
         password              || expectedException

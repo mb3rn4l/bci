@@ -4,9 +4,11 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -32,5 +34,7 @@ public class UserEntity {
 
     private String password;
 
-    private String phones;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "phone_id")
+    private List<PhoneEntity> phones;
 }

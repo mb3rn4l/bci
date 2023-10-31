@@ -2,6 +2,7 @@ package com.bci.bci.layer.infrastructure.mapper;
 
 import com.bci.bci.layer.domain.model.Phone;
 import com.bci.bci.layer.domain.model.User;
+import com.bci.bci.layer.infrastructure.jpa.entity.PhoneEntity;
 import com.bci.bci.layer.infrastructure.jpa.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +14,15 @@ import java.util.stream.Collectors;
 public class UserMapper {
 
     public UserEntity toEntity(final User user) {
-        String phones = user.getPhones()
-                .stream()
-                .map(phone -> "+" + phone.getCountryCode() + "-" + phone.getCityCode() + "-" + phone.getNumber()
-                ).collect(Collectors.joining(";"));
+
+        List<PhoneEntity> phones = user.getPhones().stream()
+                .map(phone -> PhoneEntity.builder()
+                        .countryCode(phone.getCountryCode())
+                        .cityCode(phone.getCityCode())
+                        .number(phone.getNumber())
+                        .build()
+                )
+                .collect(Collectors.toList());
 
         return UserEntity.builder()
                 .created(user.getCreated())
@@ -32,17 +38,14 @@ public class UserMapper {
 
     public User toUser(final UserEntity userEntity) {
 
-        List<Phone> phones = Arrays.stream(userEntity.getPhones().split(";"))
-                .map(phone -> {
-                    String[] items = phone.split("-");
-                    return Phone.builder()
-                            .countryCode(items[0])
-                            .cityCode(items[1])
-                            .number(items[2])
-                            .build();
-                })
-                .collect(Collectors.toList());
-
+        List<Phone> phones = userEntity.getPhones().stream()
+                .map(phoneEntity -> Phone.builder()
+                        .id(phoneEntity.getId())
+                        .countryCode(phoneEntity.getCountryCode())
+                        .cityCode(phoneEntity.getCityCode())
+                        .number(phoneEntity.getNumber())
+                        .build()
+                ).collect(Collectors.toList());
 
         return User.builder()
                 .id(userEntity.getId())
@@ -55,6 +58,5 @@ public class UserMapper {
                 .password(userEntity.getPassword())
                 .phones(phones)
                 .build();
-
     }
 }

@@ -1,6 +1,7 @@
 package com.bci.bci.layer.application.mapper;
 
 import com.bci.bci.layer.application.dto.CreateUserRequest;
+import com.bci.bci.layer.domain.constants.UserConstants;
 import com.bci.bci.layer.domain.model.User;
 import com.bci.bci.layer.domain.utils.IJwt;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class CreateUserRequestMapper {
                 .created(LocalDate.now())
                 .lastLogin(null)
                 .token(token)
-                .isActive(User.ACTIVE)
+                .isActive(UserConstants.ACTIVE)
                 .name(createUserRequest.getName())
                 .email(createUserRequest.getEmail())
                 .password(createUserRequest.getPassword())

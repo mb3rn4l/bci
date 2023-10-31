@@ -2,26 +2,30 @@ package com.bci.bci.layer.domain.service;
 
 
 import com.bci.bci.layer.domain.model.User;
-import com.bci.bci.layer.domain.port.repository.IFindUserByTokenPort;
+import com.bci.bci.layer.domain.port.repository.IFindUserByEmailPort;
 import com.bci.bci.layer.domain.port.repository.ISaveUserPort;
+import com.bci.bci.layer.domain.port.service.ILoginService;
 import com.bci.bci.layer.domain.utils.IJwt;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import static com.bci.bci.layer.domain.constants.UserConstants.EMAIL_KEY;
+
 @AllArgsConstructor
 @Service
-public class LoginService {
+public class LoginService implements ILoginService {
 
-    private final IFindUserByTokenPort userFindByTokenRepository;
+    private final IFindUserByEmailPort userFindByEmailRepository;
 
     private final ISaveUserPort saveUserRepository;
 
     private final IJwt jwt;
 
-
+    @Override
     public User execute(String token) {
 
-        User user = this.userFindByTokenRepository.findByToken(token);
+        String email = this.jwt.getClaim(token, EMAIL_KEY);
+        User user = this.userFindByEmailRepository.findByEmail(email);
         user.updateLastLogin();
         user.updateToken(jwt);
 

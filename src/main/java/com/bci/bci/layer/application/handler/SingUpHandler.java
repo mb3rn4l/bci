@@ -6,7 +6,7 @@ import com.bci.bci.layer.application.dto.CreateUserResponse;
 import com.bci.bci.layer.application.mapper.CreateUserRequestMapper;
 import com.bci.bci.layer.application.mapper.CreateUserResponseMapper;
 import com.bci.bci.layer.domain.model.User;
-import com.bci.bci.layer.domain.service.SignUpService;
+import com.bci.bci.layer.domain.port.service.ISignUpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class SingUpHandler {
 
-    private final SignUpService signUpService;
+    private final ISignUpService signUpService;
 
     private final CreateUserRequestMapper requestMapper;
 
